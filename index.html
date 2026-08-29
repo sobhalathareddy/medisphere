@@ -1,0 +1,1580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, viewport-fit=cover">
+<title>MediSphere — Complete Healthcare in One Place</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============ DESIGN TOKENS ============ */
+:root{
+  --bg:#FAFAF7;
+  --surface:#FFFFFF;
+  --surface-tint:#EFF5F3;
+  --ink:#16211D;
+  --ink-soft:#57655D;
+  --ink-faint:#8B968F;
+  --teal:#0E6E62;
+  --teal-deep:#0A4C44;
+  --teal-pale:#E1F0EC;
+  --coral:#E1503A;
+  --coral-deep:#B93A28;
+  --coral-pale:#FBE6E2;
+  --gold:#C98A2A;
+  --gold-pale:#FBF0DE;
+  --line:#E6E3D9;
+  --radius-lg:24px;
+  --radius-md:16px;
+  --radius-sm:10px;
+  --shadow-sm:0 2px 8px rgba(15,40,34,0.06);
+  --shadow-md:0 8px 24px rgba(15,40,34,0.10);
+  --shadow-lg:0 16px 40px rgba(15,40,34,0.16);
+  --font-display:'Space Grotesk',sans-serif;
+  --font-body:'Inter',sans-serif;
+  --font-mono:'IBM Plex Mono',monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;}
+body{
+  font-family:var(--font-body);
+  background:#DDE6E2;
+  color:var(--ink);
+  -webkit-font-smoothing:antialiased;
+  display:flex;
+  justify-content:center;
+}
+@media (prefers-reduced-motion: reduce){
+  *{animation-duration:0.01ms !important; transition-duration:0.01ms !important;}
+}
+
+/* ============ APP SHELL (phone frame) ============ */
+#device{
+  width:430px;
+  max-width:100vw;
+  min-height:100vh;
+  background:var(--bg);
+  position:relative;
+  overflow-x:hidden;
+  box-shadow:var(--shadow-lg);
+  display:flex;
+  flex-direction:column;
+}
+#app{
+  flex:1;
+  display:flex;
+  flex-direction:column;
+  padding-bottom:0;
+}
+.screen{
+  display:flex;
+  flex-direction:column;
+  min-height:100vh;
+  animation:slideIn .32s cubic-bezier(.22,.68,.36,1);
+}
+@keyframes slideIn{
+  from{opacity:0; transform:translateY(10px);}
+  to{opacity:1; transform:translateY(0);}
+}
+.screen.with-nav{min-height:calc(100vh - 76px);}
+
+/* ============ TYPE ============ */
+h1,h2,h3,.display{font-family:var(--font-display); color:var(--ink); font-weight:700; letter-spacing:-0.01em;}
+.eyebrow{font-family:var(--font-mono); font-size:11px; letter-spacing:0.14em; text-transform:uppercase; color:var(--teal); font-weight:600;}
+.mono{font-family:var(--font-mono);}
+p{color:var(--ink-soft); line-height:1.5;}
+
+/* ============ TOP BAR ============ */
+.topbar{
+  display:flex; align-items:center; justify-content:space-between;
+  padding:18px 20px 8px;
+}
+.topbar .back-btn{
+  width:38px;height:38px;border-radius:50%;background:var(--surface);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:var(--shadow-sm); cursor:pointer; font-size:18px; border:none; color:var(--ink);
+}
+.topbar .title{font-family:var(--font-display); font-weight:600; font-size:17px;}
+.topbar .icon-btn{
+  width:38px;height:38px;border-radius:50%;background:var(--surface);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:var(--shadow-sm); cursor:pointer; font-size:16px; border:none; position:relative;
+}
+.badge-dot{position:absolute; top:6px; right:7px; width:8px; height:8px; border-radius:50%; background:var(--coral); border:2px solid var(--surface);}
+
+/* ============ BUTTONS ============ */
+.btn{
+  font-family:var(--font-body); font-weight:600; font-size:15px;
+  border:none; border-radius:14px; padding:16px 20px;
+  cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;
+  transition:transform .15s ease, box-shadow .15s ease, background .15s ease;
+  width:100%;
+}
+.btn:active{transform:scale(0.97);}
+.btn-primary{background:var(--teal); color:#fff; box-shadow:0 6px 16px rgba(14,110,98,0.28);}
+.btn-primary:hover{background:var(--teal-deep);}
+.btn-secondary{background:var(--teal-pale); color:var(--teal-deep);}
+.btn-ghost{background:transparent; color:var(--teal-deep); border:1.5px solid var(--line);}
+.btn-coral{background:var(--coral); color:#fff; box-shadow:0 6px 16px rgba(225,80,58,0.28);}
+.btn-coral:hover{background:var(--coral-deep);}
+.btn-sm{padding:10px 14px; font-size:13px; border-radius:10px; width:auto;}
+.btn-block-row{display:flex; gap:10px;}
+.btn:disabled{opacity:0.5; cursor:not-allowed;}
+
+/* ============ CARDS / SURFACES ============ */
+.card{
+  background:var(--surface); border-radius:var(--radius-md);
+  box-shadow:var(--shadow-sm); padding:16px; border:1px solid rgba(230,227,217,0.7);
+}
+.section{padding:0 20px 20px;}
+.section-title{font-family:var(--font-display); font-size:20px; font-weight:700; margin-bottom:4px;}
+.section-sub{color:var(--ink-soft); font-size:14px; margin-bottom:16px;}
+
+/* ============ FORMS ============ */
+.field{margin-bottom:14px;}
+.field label{display:block; font-size:12.5px; font-weight:600; color:var(--ink-soft); margin-bottom:6px;}
+.field input, .field select, .field textarea{
+  width:100%; border:1.5px solid var(--line); border-radius:12px; padding:13px 14px;
+  font-family:var(--font-body); font-size:14.5px; color:var(--ink); background:var(--surface);
+  transition:border-color .15s ease;
+}
+.field input:focus, .field select:focus, .field textarea:focus{outline:none; border-color:var(--teal);}
+.field-error{border-color:var(--coral) !important;}
+.error-msg{color:var(--coral-deep); font-size:12px; margin-top:5px; display:none;}
+.field-hint{font-size:12px; color:var(--ink-faint); margin-top:5px;}
+
+/* ============ MISC UI ============ */
+.chip{
+  display:inline-flex; align-items:center; padding:7px 13px; border-radius:100px;
+  background:var(--teal-pale); color:var(--teal-deep); font-size:13px; font-weight:600;
+  cursor:pointer; border:1.5px solid transparent; white-space:nowrap;
+}
+.chip.active{background:var(--teal); color:#fff;}
+.chip.coral{background:var(--coral-pale); color:var(--coral-deep);}
+.chip.coral.active{background:var(--coral); color:#fff;}
+.tag{font-size:11px; font-weight:700; padding:4px 9px; border-radius:100px; display:inline-flex; align-items:center; gap:4px;}
+.tag-open{background:var(--teal-pale); color:var(--teal-deep);}
+.tag-closed{background:#F0EDE4; color:var(--ink-faint);}
+.tag-gold{background:var(--gold-pale); color:var(--gold);}
+.divider{height:1px; background:var(--line); margin:16px 0;}
+.avatar{width:52px; height:52px; border-radius:16px; background:var(--teal-pale); display:flex; align-items:center; justify-content:center; font-size:24px; flex-shrink:0;}
+.avatar.round{border-radius:50%;}
+.stack-gap-8 > * + *{margin-top:8px;}
+.stack-gap-12 > * + *{margin-top:12px;}
+.stack-gap-16 > * + *{margin-top:16px;}
+.row{display:flex; align-items:center;}
+.row-between{display:flex; align-items:center; justify-content:space-between;}
+.grow{flex:1;}
+.searchbar{
+  display:flex; align-items:center; gap:10px; background:var(--surface);
+  border:1.5px solid var(--line); border-radius:14px; padding:13px 16px; box-shadow:var(--shadow-sm);
+}
+.searchbar input{border:none; outline:none; flex:1; font-family:var(--font-body); font-size:14.5px; background:transparent;}
+
+/* Departure-board token digit — signature element */
+.token-board{
+  display:inline-flex; gap:3px; font-family:var(--font-mono); font-weight:700;
+}
+.token-digit{
+  background:var(--teal-deep); color:#EAF5F2; border-radius:6px; padding:4px 2px;
+  min-width:26px; text-align:center; font-size:20px; box-shadow:inset 0 -2px 0 rgba(0,0,0,0.2);
+  transition:transform .35s cubic-bezier(.34,1.56,.64,1), background .35s ease;
+}
+.token-digit.flip{animation:flipDigit .4s ease;}
+@keyframes flipDigit{
+  0%{transform:rotateX(0deg);} 45%{transform:rotateX(90deg); background:var(--teal);} 100%{transform:rotateX(0deg);}
+}
+.token-digit.lg{font-size:34px; padding:8px 6px; min-width:38px; border-radius:9px;}
+
+/* Toast */
+#toast-wrap{position:absolute; top:14px; left:0; right:0; display:flex; flex-direction:column; align-items:center; gap:8px; z-index:999; pointer-events:none; padding:0 16px;}
+.toast{
+  background:var(--ink); color:#fff; padding:12px 18px; border-radius:100px; font-size:13.5px; font-weight:500;
+  box-shadow:var(--shadow-lg); display:flex; align-items:center; gap:8px; max-width:100%;
+  animation:toastIn .28s ease, toastOut .3s ease 2.7s forwards;
+}
+@keyframes toastIn{from{opacity:0; transform:translateY(-12px);} to{opacity:1; transform:translateY(0);}}
+@keyframes toastOut{to{opacity:0; transform:translateY(-12px);}}
+
+/* Bottom nav */
+#bottomnav{
+  position:sticky; bottom:0; left:0; right:0; background:var(--surface);
+  border-top:1px solid var(--line); display:flex; z-index:50;
+  box-shadow:0 -4px 16px rgba(15,40,34,0.06);
+}
+.nav-item{
+  flex:1; display:flex; flex-direction:column; align-items:center; gap:3px;
+  padding:11px 0 10px; cursor:pointer; border:none; background:none; font-family:var(--font-body);
+  color:var(--ink-faint); font-size:11px; font-weight:600; position:relative;
+}
+.nav-item.active{color:var(--teal-deep);}
+.nav-item .nav-ico{font-size:19px;}
+.nav-item .nav-dot{position:absolute; top:6px; right:calc(50% - 18px); width:7px; height:7px; border-radius:50%; background:var(--coral);}
+
+/* Service cards grid */
+.service-grid{display:grid; grid-template-columns:1fr 1fr; gap:14px; padding:0 20px 20px;}
+.service-card{
+  background:var(--surface); border-radius:20px; padding:18px 16px; box-shadow:var(--shadow-sm);
+  border:1px solid rgba(230,227,217,0.7); cursor:pointer; transition:transform .15s ease, box-shadow .15s ease;
+  text-align:left; display:flex; flex-direction:column; gap:10px; min-height:150px;
+}
+.service-card:active{transform:scale(0.96);}
+.service-card .ico-wrap{width:44px; height:44px; border-radius:13px; display:flex; align-items:center; justify-content:center; font-size:22px;}
+.service-card h3{font-size:15.5px; font-family:var(--font-display);}
+.service-card p{font-size:12px; line-height:1.4;}
+
+/* Loading spinner */
+.spinner{width:20px; height:20px; border-radius:50%; border:3px solid rgba(255,255,255,0.35); border-top-color:#fff; animation:spin .7s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.loading-row{display:flex; align-items:center; justify-content:center; gap:10px; padding:30px 0; color:var(--ink-soft); font-size:14px;}
+.dot-pulse{display:flex; gap:5px;}
+.dot-pulse span{width:7px; height:7px; border-radius:50%; background:var(--teal); animation:pulse 1s infinite ease-in-out;}
+.dot-pulse span:nth-child(2){animation-delay:.15s;} .dot-pulse span:nth-child(3){animation-delay:.3s;}
+@keyframes pulse{0%,80%,100%{opacity:.25; transform:scale(.7);} 40%{opacity:1; transform:scale(1);}}
+
+/* progress bar for queue */
+.progress-track{height:8px; background:var(--teal-pale); border-radius:100px; overflow:hidden;}
+.progress-fill{height:100%; background:linear-gradient(90deg,var(--teal),var(--teal-deep)); border-radius:100px; transition:width .6s ease;}
+
+/* checkbox / tab pills */
+.tabs{display:flex; background:var(--surface-tint); border-radius:14px; padding:4px; gap:4px;}
+.tab-btn{flex:1; border:none; background:transparent; padding:11px 0; border-radius:11px; font-family:var(--font-body); font-weight:600; font-size:14px; color:var(--ink-soft); cursor:pointer;}
+.tab-btn.active{background:var(--surface); color:var(--teal-deep); box-shadow:var(--shadow-sm);}
+
+/* category grid */
+.cat-grid{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+.cat-card{background:var(--surface); border:1.5px solid var(--line); border-radius:16px; padding:16px; cursor:pointer; text-align:center; transition:border-color .15s;}
+.cat-card:active{border-color:var(--teal);}
+.cat-card .cat-ico{font-size:26px; margin-bottom:8px;}
+.cat-card span{font-size:13px; font-weight:600;}
+
+.empty-state{text-align:center; padding:50px 24px; color:var(--ink-faint);}
+.empty-state .ico{font-size:40px; margin-bottom:14px;}
+
+::-webkit-scrollbar{display:none;}
+a{color:inherit;}
+button{font-family:var(--font-body);}
+</style>
+</head>
+<body>
+<div id="device">
+  <div id="toast-wrap"></div>
+  <div id="app"></div>
+  <div id="bottomnav" style="display:none;"></div>
+</div>
+
+<script>
+/* =========================================================
+   MEDISPHERE PROTOTYPE — APP LOGIC
+   ========================================================= */
+
+/* ---------- DEMO DATA ---------- */
+const DEPARTMENTS = [
+  {id:'gen', name:'General Medicine', ico:'🩺'},
+  {id:'card', name:'Cardiology', ico:'❤️'},
+  {id:'ortho', name:'Orthopedics', ico:'🦴'},
+  {id:'derm', name:'Dermatology', ico:'✨'},
+  {id:'ped', name:'Pediatrics', ico:'🧒'},
+  {id:'neuro', name:'Neurology', ico:'🧠'},
+  {id:'ent', name:'ENT', ico:'👂'},
+  {id:'dental', name:'Dental', ico:'🦷'},
+];
+
+const HOSPITALS = [
+  {id:'h1', name:'City Care Hospital', rating:4.5, distance:'1.2 KM', open:true, address:'14 MG Road, Indiranagar', phone:'080-4567-1234', hours:'24 Hours · Emergency Available', emergency:true, depts:['gen','card','ortho','derm','ped','ent']},
+  {id:'h2', name:'Apollo Health Center', rating:4.7, distance:'2.8 KM', open:true, address:'22 Residency Cross, Richmond Town', phone:'080-2233-9090', hours:'7:00 AM – 10:00 PM', emergency:true, depts:['card','ortho','derm','neuro','dental']},
+  {id:'h3', name:'Sunrise Multispecialty Hospital', rating:4.3, distance:'3.5 KM', open:false, address:'8 Hosur Road, Koramangala', phone:'080-3344-5566', hours:'9:00 AM – 9:00 PM', emergency:false, depts:['gen','ped','neuro','ent','dental']},
+];
+
+const DOCTORS = [
+  {id:'d1', hospitalId:'h1', dept:'card', name:'Dr. Ravi Kumar', spec:'Cardiologist', exp:12, rating:4.8, fee:500, currentToken:5},
+  {id:'d2', hospitalId:'h1', dept:'gen', name:'Dr. Anjali Nair', spec:'General Physician', exp:8, rating:4.6, fee:300, currentToken:3},
+  {id:'d3', hospitalId:'h1', dept:'derm', name:'Dr. Kavya Iyer', spec:'Dermatologist', exp:6, rating:4.5, fee:400, currentToken:2},
+  {id:'d4', hospitalId:'h1', dept:'ortho', name:'Dr. Manoj Pillai', spec:'Orthopedic Surgeon', exp:14, rating:4.7, fee:550, currentToken:6},
+  {id:'d5', hospitalId:'h1', dept:'ped', name:'Dr. Sneha Reddy', spec:'Pediatrician', exp:9, rating:4.9, fee:350, currentToken:4},
+  {id:'d6', hospitalId:'h1', dept:'ent', name:'Dr. Farhan Sheikh', spec:'ENT Specialist', exp:7, rating:4.4, fee:380, currentToken:1},
+  {id:'d7', hospitalId:'h2', dept:'ortho', name:'Dr. Suresh Menon', spec:'Orthopedic Surgeon', exp:15, rating:4.9, fee:600, currentToken:8},
+  {id:'d8', hospitalId:'h2', dept:'card', name:'Dr. Priya Sharma', spec:'Cardiologist', exp:10, rating:4.6, fee:520, currentToken:3},
+  {id:'d9', hospitalId:'h2', dept:'derm', name:'Dr. Arjun Das', spec:'Dermatologist', exp:5, rating:4.3, fee:380, currentToken:2},
+  {id:'d10', hospitalId:'h2', dept:'neuro', name:'Dr. Meera Krishnan', spec:'Neurologist', exp:13, rating:4.8, fee:700, currentToken:2},
+  {id:'d11', hospitalId:'h2', dept:'dental', name:'Dr. Ibrahim Khan', spec:'Dental Surgeon', exp:9, rating:4.5, fee:350, currentToken:5},
+  {id:'d12', hospitalId:'h3', dept:'gen', name:'Dr. Latha Rao', spec:'General Physician', exp:11, rating:4.4, fee:300, currentToken:4},
+  {id:'d13', hospitalId:'h3', dept:'ped', name:'Dr. Vikram Shetty', spec:'Pediatrician', exp:8, rating:4.6, fee:340, currentToken:3},
+  {id:'d14', hospitalId:'h3', dept:'neuro', name:'Dr. Nisha Verma', spec:'Neurologist', exp:16, rating:4.9, fee:750, currentToken:1},
+  {id:'d15', hospitalId:'h3', dept:'ent', name:'Dr. Rohan Kapoor', spec:'ENT Specialist', exp:6, rating:4.3, fee:360, currentToken:2},
+  {id:'d16', hospitalId:'h3', dept:'dental', name:'Dr. Divya Menon', spec:'Dental Surgeon', exp:7, rating:4.5, fee:320, currentToken:4},
+];
+
+const PHARMACIES = [
+  {id:'p1', name:'HealthPlus Medical Store', rating:4.6, distance:'500 meters', open:true, delivery:true, address:'Shop 4, MG Road', phone:'080-1122-3344', hours:'8:00 AM – 11:00 PM'},
+  {id:'p2', name:'Wellness Pharmacy', rating:4.4, distance:'1.1 KM', open:true, delivery:true, address:'12 Church Street', phone:'080-5566-7788', hours:'9:00 AM – 10:00 PM'},
+  {id:'p3', name:'CarePoint Chemist', rating:4.2, distance:'2.3 KM', open:false, delivery:false, address:'45 Brigade Road', phone:'080-9988-7766', hours:'9:00 AM – 9:00 PM'},
+];
+
+const BLOOD_BANKS = [
+  {id:'b1', name:'City Blood Bank', distance:'2.5 KM', open:true, address:'City Care Hospital Campus, MG Road', phone:'080-4567-0001', hours:'24 Hours', stock:{'A+':true,'A-':false,'B+':true,'B-':true,'AB+':false,'AB-':false,'O+':true,'O-':true}},
+  {id:'b2', name:'Red Cross Blood Center', distance:'4.1 KM', open:true, address:'Cubbon Park Road', phone:'080-2211-3300', hours:'8:00 AM – 8:00 PM', stock:{'A+':true,'A-':true,'B+':false,'B-':false,'AB+':true,'AB-':false,'O+':true,'O-':false}},
+  {id:'b3', name:'LifeLine Blood Bank', distance:'5.6 KM', open:true, address:'Koramangala 5th Block', phone:'080-3300-4400', hours:'24 Hours', stock:{'A+':false,'A-':false,'B+':true,'B-':true,'AB+':true,'AB-':true,'O+':true,'O-':false}},
+];
+
+const RECORD_CATS = [
+  {id:'presc', name:'Prescriptions', ico:'📄'},
+  {id:'blood', name:'Blood Reports', ico:'🩸'},
+  {id:'lab', name:'Lab Reports', ico:'🔬'},
+  {id:'xray', name:'X-Rays', ico:'🩻'},
+  {id:'scan', name:'Scan Reports', ico:'🧠'},
+  {id:'hosp', name:'Hospital Documents', ico:'🏥'},
+  {id:'discharge', name:'Discharge Summaries', ico:'📋'},
+];
+
+/* ---------- STATE ---------- */
+const state = {
+  user:{name:'', email:'', phone:''},
+  profile:{},
+  authTab:'login',
+  stack:[{screen:'welcome', params:{}}],
+  showNav:false,
+  runningTokenByDoctor:{d1:5,d2:3,d3:2,d4:6,d5:4,d6:1,d7:8,d8:3,d9:2,d10:2,d11:5,d12:4,d13:3,d14:1,d15:2,d16:4},
+  booking:null, // {hospitalId doctorId dept date time token reminderToken}
+  bookings:[],
+  records:[
+    {id:'r1', name:'Blood Test Report', cat:'blood', hospital:'City Care Hospital', doctor:'Dr. Ravi Kumar', date:'12 Aug 2026', uploaded:'12 Aug 2026', notes:'Routine annual checkup'},
+    {id:'r2', name:'Chest X-Ray', cat:'xray', hospital:'Apollo Health Center', doctor:'Dr. Suresh Menon', date:'03 Jul 2026', uploaded:'03 Jul 2026', notes:'Post fracture follow-up'},
+  ],
+  notifications:[
+    {ico:'🎟️', text:'Token 7 is currently running. Your appointment is approaching.', time:'2 min ago', unread:true},
+    {ico:'💊', text:'HealthPlus Medical Store responded to your medicine inquiry.', time:'1 hr ago', unread:true},
+    {ico:'🩸', text:'City Blood Bank has updated O+ availability.', time:'3 hr ago', unread:false},
+    {ico:'📁', text:'Your Blood Test Report was successfully uploaded.', time:'Yesterday', unread:false},
+  ],
+  medicineQuery:'',
+  bloodGroup:null,
+};
+
+function unreadCount(){ return state.notifications.filter(n=>n.unread).length; }
+
+/* ---------- NAV ---------- */
+function nav(screen, params={}){
+  state.stack.push({screen, params});
+  render();
+  window.scrollTo(0,0);
+}
+function navReplace(screen, params={}){
+  state.stack[state.stack.length-1] = {screen, params};
+  render();
+}
+function navRoot(screen, params={}){
+  state.stack = [{screen, params}];
+  render();
+}
+function back(){
+  if(state.stack.length>1){ state.stack.pop(); render(); window.scrollTo(0,0); }
+}
+function current(){ return state.stack[state.stack.length-1]; }
+
+/* ---------- TOAST ---------- */
+function toast(text, ico='✅'){
+  const wrap = document.getElementById('toast-wrap');
+  const el = document.createElement('div');
+  el.className='toast';
+  el.innerHTML = `<span>${ico}</span><span>${text}</span>`;
+  wrap.appendChild(el);
+  setTimeout(()=>el.remove(), 3050);
+}
+
+/* ---------- SHARED UI HELPERS ---------- */
+function topbar(title, {back:showBack=true, icons=true}={}){
+  return `<div class="topbar">
+    ${showBack ? `<button class="back-btn" onclick="back()">←</button>` : `<div style="width:38px"></div>`}
+    <div class="title">${title}</div>
+    ${icons ? `<button class="icon-btn" onclick="nav('notifications')">🔔${unreadCount()>0?'<span class="badge-dot"></span>':''}</button>` : `<div style="width:38px"></div>`}
+  </div>`;
+}
+function stars(rating){
+  return `<span class="tag tag-gold">⭐ ${rating}</span>`;
+}
+function statusTag(open){
+  return open ? `<span class="tag tag-open">🟢 Open Now</span>` : `<span class="tag tag-closed">⚪ Closed</span>`;
+}
+function tokenBoard(num, size=''){
+  const digits = String(num).padStart(2,'0').split('');
+  return `<span class="token-board">${digits.map(d=>`<span class="token-digit ${size}">${d}</span>`).join('')}</span>`;
+}
+function fieldError(inputId, msgId, show, msg){
+  const inp = document.getElementById(inputId);
+  const em = document.getElementById(msgId);
+  if(!inp) return;
+  if(show){ inp.classList.add('field-error'); if(em){em.style.display='block'; if(msg) em.textContent=msg;} }
+  else { inp.classList.remove('field-error'); if(em) em.style.display='none'; }
+}
+function val(id){ const e=document.getElementById(id); return e ? e.value.trim() : ''; }
+
+/* ---------- RENDER DISPATCH ---------- */
+const NAV_SCREENS = ['dashboard','notifications','recordsHome','profile'];
+
+function render(){
+  const {screen, params} = current();
+  const appEl = document.getElementById('app');
+  const fn = SCREENS[screen];
+  state.showNav = NAV_SCREENS.includes(screen);
+  appEl.innerHTML = `<div class="screen ${state.showNav?'with-nav':''}">${fn ? fn(params) : notFoundScreen()}</div>`;
+  renderBottomNav();
+}
+function notFoundScreen(){ return `<div class="empty-state"><div class="ico">🚧</div><p>Screen not available in this prototype.</p></div>`; }
+
+function renderBottomNav(){
+  const nEl = document.getElementById('bottomnav');
+  if(!state.showNav){ nEl.style.display='none'; return; }
+  nEl.style.display='flex';
+  const activeScreen = current().screen;
+  const items = [
+    {id:'dashboard', ico:'🏠', label:'Home'},
+    {id:'notifications', ico:'🔔', label:'Notifications', dot:unreadCount()>0},
+    {id:'recordsHome', ico:'📁', label:'Records'},
+    {id:'profile', ico:'👤', label:'Profile'},
+  ];
+  nEl.innerHTML = items.map(it=>`
+    <button class="nav-item ${activeScreen===it.id?'active':''}" onclick="navRoot('${it.id}')">
+      ${it.dot?'<span class="nav-dot"></span>':''}
+      <span class="nav-ico">${it.ico}</span>
+      <span>${it.label}</span>
+    </button>`).join('');
+}
+
+const SCREENS = {};
+
+/* ================= 1. WELCOME ================= */
+SCREENS.welcome = () => `
+  <div style="flex:1; display:flex; flex-direction:column; padding:56px 28px 36px; background:linear-gradient(180deg, var(--teal-pale) 0%, var(--bg) 62%);">
+    <div class="eyebrow">Healthcare · Simplified</div>
+    <div style="margin-top:64px; text-align:center;">
+      <div style="font-size:54px; line-height:1;">🩺</div>
+      <h1 style="font-size:40px; margin-top:18px;">MediSphere</h1>
+      <p style="font-family:var(--font-display); font-weight:600; color:var(--teal-deep); font-size:15px; margin-top:6px; letter-spacing:0.01em;">Complete Healthcare in One Place</p>
+    </div>
+    <p style="text-align:center; margin-top:22px; font-size:14.5px; padding:0 6px;">Your healthcare journey, simplified. Find hospitals, book appointments, check medicines, access blood support, and manage medical records — all in one place.</p>
+
+    <div style="display:flex; justify-content:center; gap:14px; margin:36px 0; font-size:26px;">
+      <div class="card" style="width:64px; height:64px; display:flex; align-items:center; justify-content:center; border-radius:18px;">🏥</div>
+      <div class="card" style="width:64px; height:64px; display:flex; align-items:center; justify-content:center; border-radius:18px;">💊</div>
+      <div class="card" style="width:64px; height:64px; display:flex; align-items:center; justify-content:center; border-radius:18px;">🩸</div>
+      <div class="card" style="width:64px; height:64px; display:flex; align-items:center; justify-content:center; border-radius:18px;">📁</div>
+    </div>
+
+    <div style="flex:1"></div>
+    <button class="btn btn-primary" style="font-size:16px; padding:18px;" onclick="nav('auth')">GET STARTED →</button>
+    <p style="text-align:center; font-size:11.5px; margin-top:14px; color:var(--ink-faint);">Find → Book → Track → Check → Request → Store</p>
+  </div>
+`;
+
+/* ================= 2. LOGIN / SIGN UP ================= */
+SCREENS.auth = () => `
+  <div class="section" style="padding-top:50px;">
+    <div class="eyebrow">Step 1 of 3</div>
+    <h1 style="font-size:26px; margin-top:8px;">Welcome to MediSphere</h1>
+    <p style="margin-top:6px; font-size:14px;">Sign in or create an account to continue.</p>
+
+    <div class="tabs" style="margin-top:24px;">
+      <button class="tab-btn ${state.authTab==='login'?'active':''}" onclick="state.authTab='login'; render();">Login</button>
+      <button class="tab-btn ${state.authTab==='signup'?'active':''}" onclick="state.authTab='signup'; render();">Sign Up</button>
+    </div>
+
+    <div style="margin-top:24px;">
+      ${state.authTab==='login' ? loginForm() : signupForm()}
+    </div>
+  </div>
+`;
+
+function loginForm(){
+  return `
+    <div class="field">
+      <label>Email or Mobile Number</label>
+      <input id="li-user" type="text" placeholder="you@example.com or 98765 43210">
+      <div class="error-msg" id="li-user-err">Please enter your email or mobile number.</div>
+    </div>
+    <div class="field">
+      <label>Password</label>
+      <input id="li-pass" type="password" placeholder="Enter your password">
+      <div class="error-msg" id="li-pass-err">Please enter your password.</div>
+    </div>
+    <div style="text-align:right; margin-bottom:20px;">
+      <a style="font-size:12.5px; color:var(--teal-deep); font-weight:600; cursor:pointer;" onclick="toast('Password reset link sent (demo)','📧')">Forgot Password?</a>
+    </div>
+    <button class="btn btn-primary" onclick="doLogin()">LOGIN</button>
+    <p style="text-align:center; margin-top:18px; font-size:13.5px;">Don't have an account? <a style="color:var(--teal-deep); font-weight:600; cursor:pointer;" onclick="state.authTab='signup'; render();">Sign Up</a></p>
+  `;
+}
+function signupForm(){
+  return `
+    <div class="field"><label>Full Name</label><input id="su-name" placeholder="Pavan Kumar"><div class="error-msg" id="su-name-err">Please enter your full name.</div></div>
+    <div class="field"><label>Email Address</label><input id="su-email" placeholder="you@example.com"><div class="error-msg" id="su-email-err">Please enter a valid email address.</div></div>
+    <div class="field"><label>Mobile Number</label><input id="su-mobile" placeholder="98765 43210"><div class="error-msg" id="su-mobile-err">Please enter a valid 10-digit mobile number.</div></div>
+    <div class="field"><label>Password</label><input id="su-pass" type="password" placeholder="Create a password"><div class="error-msg" id="su-pass-err">Password must be at least 6 characters.</div></div>
+    <div class="field"><label>Confirm Password</label><input id="su-cpass" type="password" placeholder="Re-enter password"><div class="error-msg" id="su-cpass-err">Passwords do not match.</div></div>
+    <button class="btn btn-primary" onclick="doSignup()">CREATE ACCOUNT</button>
+    <p style="text-align:center; margin-top:18px; font-size:13.5px;">Already have an account? <a style="color:var(--teal-deep); font-weight:600; cursor:pointer;" onclick="state.authTab='login'; render();">Login</a></p>
+  `;
+}
+function doLogin(){
+  const user = val('li-user'), pass = val('li-pass');
+  let ok = true;
+  if(!user){ fieldError('li-user','li-user-err',true); ok=false; } else fieldError('li-user','li-user-err',false);
+  if(!pass){ fieldError('li-pass','li-pass-err',true); ok=false; } else fieldError('li-pass','li-pass-err',false);
+  if(!ok) return;
+  state.user.name = state.user.name || 'Pavan';
+  state.user.email = user.includes('@') ? user : state.user.email;
+  state.user.phone = !user.includes('@') ? user : state.user.phone;
+  toast('Logged in successfully','✅');
+  navRoot('profileSetup');
+}
+function doSignup(){
+  const name=val('su-name'), email=val('su-email'), mobile=val('su-mobile'), pass=val('su-pass'), cpass=val('su-cpass');
+  let ok = true;
+  if(!name){ fieldError('su-name','su-name-err',true); ok=false; } else fieldError('su-name','su-name-err',false);
+  const emailOk = /^\S+@\S+\.\S+$/.test(email);
+  if(!emailOk){ fieldError('su-email','su-email-err',true); ok=false; } else fieldError('su-email','su-email-err',false);
+  const mobileOk = /^\d[\d\s]{8,}\d$/.test(mobile.replace(/\s/g,'')) && mobile.replace(/\D/g,'').length===10;
+  if(!mobileOk){ fieldError('su-mobile','su-mobile-err',true); ok=false; } else fieldError('su-mobile','su-mobile-err',false);
+  if(!pass || pass.length<6){ fieldError('su-pass','su-pass-err',true); ok=false; } else fieldError('su-pass','su-pass-err',false);
+  if(!cpass || cpass!==pass){ fieldError('su-cpass','su-cpass-err',true); ok=false; } else fieldError('su-cpass','su-cpass-err',false);
+  if(!ok) return;
+  state.user = {name, email, phone:mobile};
+  toast('Account created successfully','🎉');
+  navRoot('profileSetup');
+}
+
+/* ================= 3. PROFILE SETUP ================= */
+SCREENS.profileSetup = () => `
+  <div class="section" style="padding-top:50px;">
+    <div class="eyebrow">Step 2 of 3</div>
+    <h1 style="font-size:24px; margin-top:8px;">Complete Your Profile</h1>
+    <p style="margin-top:6px; font-size:14px;">Help us personalize your MediSphere healthcare experience.</p>
+
+    <div style="margin-top:26px;" class="stack-gap-16">
+      <div class="card">
+        <h3 style="font-size:15px; margin-bottom:14px;">👤 Personal Details</h3>
+        <div style="display:flex; justify-content:center; margin-bottom:16px;">
+          <div class="avatar round" style="width:76px; height:76px; font-size:30px; cursor:pointer; border:2px dashed var(--line);" onclick="toast('Photo selected (demo)','📷')">📷</div>
+        </div>
+        <div class="field"><label>Full Name</label><input id="ps-name" value="${state.user.name||''}" placeholder="Pavan Kumar"></div>
+        <div class="row" style="gap:12px;">
+          <div class="field grow"><label>Date of Birth</label><input id="ps-dob" type="date"></div>
+          <div class="field grow"><label>Gender</label>
+            <select id="ps-gender"><option>Male</option><option>Female</option><option>Other</option><option>Prefer not to say</option></select>
+          </div>
+        </div>
+        <div class="field"><label>Mobile Number</label><input id="ps-mobile" value="${state.user.phone||''}" placeholder="98765 43210"></div>
+        <div class="field" style="margin-bottom:0;"><label>Email Address</label><input id="ps-email" value="${state.user.email||''}" placeholder="you@example.com"></div>
+      </div>
+
+      <div class="card">
+        <h3 style="font-size:15px; margin-bottom:14px;">🏠 Address Details</h3>
+        <div class="field"><label>House / Building Name or Number</label><input id="ps-house" placeholder="Flat 302, Sunrise Apartments"></div>
+        <div class="field"><label>Street / Area</label><input id="ps-street" placeholder="MG Road, Indiranagar"></div>
+        <div class="row" style="gap:12px;">
+          <div class="field grow"><label>City</label><input id="ps-city" placeholder="Bengaluru"></div>
+          <div class="field grow"><label>District</label><input id="ps-district" placeholder="Bengaluru Urban"></div>
+        </div>
+        <div class="row" style="gap:12px;">
+          <div class="field grow"><label>State</label><input id="ps-state" placeholder="Karnataka"></div>
+          <div class="field grow"><label>PIN Code</label><input id="ps-pin" placeholder="560038"></div>
+        </div>
+        <button type="button" class="chip" onclick="useCurrentLocation()">📍 Use Current Location</button>
+      </div>
+
+      <div class="card">
+        <h3 style="font-size:15px; margin-bottom:14px;">🚨 Emergency Contact</h3>
+        <div class="field"><label>Emergency Contact Name</label><input id="ps-ec-name" placeholder="Ravi Kumar"></div>
+        <div class="row" style="gap:12px;">
+          <div class="field grow"><label>Relationship</label><input id="ps-ec-rel" placeholder="Father"></div>
+          <div class="field grow" style="margin-bottom:0;"><label>Emergency Mobile Number</label><input id="ps-ec-phone" placeholder="9876543210"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3 style="font-size:15px; margin-bottom:4px;">🩺 Optional Health Details</h3>
+        <p style="font-size:12px; margin-bottom:14px;">These help us serve you better in an emergency — you can skip for now.</p>
+        <div class="field"><label>Blood Group</label>
+          <select id="ps-bg"><option value="">Select blood group</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>AB+</option><option>AB-</option><option>O+</option><option>O-</option></select>
+        </div>
+        <div class="field"><label>Allergies</label><input id="ps-allergy" placeholder="e.g. Penicillin, Peanuts"></div>
+        <div class="field" style="margin-bottom:0;"><label>Important Medical Notes</label><textarea id="ps-notes" rows="2" placeholder="e.g. Diabetic, on regular medication"></textarea></div>
+      </div>
+
+      <p style="font-size:12px; text-align:center; display:flex; align-items:center; justify-content:center; gap:6px;">🔒 Your health information is private and securely managed.</p>
+
+      <button class="btn btn-primary" onclick="saveProfile()">SAVE & CONTINUE</button>
+    </div>
+  </div>
+`;
+function useCurrentLocation(){
+  document.getElementById('ps-house').value = document.getElementById('ps-house').value || 'Flat 302, Sunrise Apartments';
+  document.getElementById('ps-street').value = 'MG Road, Indiranagar';
+  document.getElementById('ps-city').value = 'Bengaluru';
+  document.getElementById('ps-district').value = 'Bengaluru Urban';
+  document.getElementById('ps-state').value = 'Karnataka';
+  document.getElementById('ps-pin').value = '560038';
+  toast('Current location detected','📍');
+}
+function saveProfile(){
+  const name = val('ps-name');
+  if(!name){ toast('Please enter your full name','⚠️'); return; }
+  state.user.name = name;
+  state.profile = {
+    dob: val('ps-dob'), gender: val('ps-gender'), mobile: val('ps-mobile'), email: val('ps-email'),
+    house: val('ps-house'), street: val('ps-street'), city: val('ps-city')||'Bengaluru', district: val('ps-district'), state: val('ps-state'), pin: val('ps-pin'),
+    ecName: val('ps-ec-name'), ecRel: val('ps-ec-rel'), ecPhone: val('ps-ec-phone'),
+    bloodGroup: val('ps-bg'), allergies: val('ps-allergy'), notes: val('ps-notes'),
+  };
+  toast('Profile saved successfully','🎉');
+  navRoot('dashboard');
+}
+
+/* ================= 4. DASHBOARD ================= */
+function greeting(){
+  const h = new Date().getHours();
+  if(h<12) return 'Good Morning';
+  if(h<17) return 'Good Afternoon';
+  return 'Good Evening';
+}
+SCREENS.dashboard = () => `
+  <div style="padding:18px 20px 6px;">
+    <div class="row-between">
+      <div>
+        <div class="eyebrow">MediSphere</div>
+        <h1 style="font-size:21px; margin-top:4px;">${greeting()}, ${(state.user.name||'Pavan').split(' ')[0]} 👋</h1>
+        <p style="font-size:13.5px; margin-top:2px;">How can we help you today?</p>
+      </div>
+      <div class="row" style="gap:10px;">
+        <button class="icon-btn" onclick="nav('notifications')">🔔${unreadCount()>0?'<span class="badge-dot"></span>':''}</button>
+        <button class="icon-btn" onclick="nav('profile')">👤</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section" style="padding-top:14px;">
+    <div class="searchbar" onclick="nav('hospitalHome')" style="cursor:pointer;">
+      <span>🔍</span><span style="color:var(--ink-faint); font-size:14px;">Search hospitals, medicines, blood banks…</span>
+    </div>
+  </div>
+
+  <div class="section" style="padding-top:0;">
+    <div class="section-title" style="font-size:16px;">Our Services</div>
+  </div>
+  <div class="service-grid">
+    <button class="service-card" onclick="nav('hospitalHome')">
+      <div class="ico-wrap" style="background:var(--teal-pale);">🏥</div>
+      <h3>Hospital Care</h3>
+      <p>Find hospitals, doctors, and book your appointment.</p>
+    </button>
+    <button class="service-card" onclick="nav('pharmacyHome')">
+      <div class="ico-wrap" style="background:var(--gold-pale);">💊</div>
+      <h3>Medicine & Pharmacy</h3>
+      <p>Find medicines and connect with nearby pharmacies.</p>
+    </button>
+    <button class="service-card" onclick="nav('bloodHome')">
+      <div class="ico-wrap" style="background:var(--coral-pale);">🩸</div>
+      <h3>Blood Support</h3>
+      <p>Find blood banks and get emergency blood support.</p>
+    </button>
+    <button class="service-card" onclick="nav('recordsHome')">
+      <div class="ico-wrap" style="background:var(--surface-tint);">📁</div>
+      <h3>My Health Records</h3>
+      <p>Securely store and manage your medical documents.</p>
+    </button>
+  </div>
+
+  ${state.booking && state.booking.status==='active' ? `
+  <div class="section" style="padding-top:0;">
+    <div class="card" style="background:var(--teal-deep); border:none;" onclick="nav('liveToken', state.booking)">
+      <div class="row-between">
+        <div>
+          <div style="color:#BFE3DC; font-size:11.5px; font-weight:600;">LIVE TOKEN · ${state.booking.doctorName}</div>
+          <div style="color:#fff; font-size:13px; margin-top:4px;">Your Token: <b>${state.booking.token}</b></div>
+        </div>
+        ${tokenBoard(state.runningTokenByDoctor[state.booking.doctorId])}
+      </div>
+    </div>
+  </div>` : ''}
+
+  <div class="section" style="padding-top:0;">
+    <div class="section-title" style="font-size:16px;">Quick Actions</div>
+    <div class="row" style="gap:10px; overflow-x:auto;">
+      <button class="chip" onclick="nav('hospitalHome')">🏥 Nearby Hospitals</button>
+      <button class="chip" onclick="nav('bloodHome')">🩸 Emergency Blood</button>
+      <button class="chip" onclick="nav('recordsHome')">📁 My Records</button>
+    </div>
+  </div>
+`;
+
+/* ================= 5. HOSPITAL CARE ================= */
+SCREENS.hospitalHome = () => `
+  ${topbar('Hospital Care')}
+  <div class="section" style="padding-top:6px;">
+    <div class="section-title">Find the Right Care</div>
+    <div class="searchbar">
+      <span>🔍</span>
+      <input id="hosp-search" placeholder="Search hospital, doctor, department, or location" oninput="renderHospitalList()">
+    </div>
+    <div class="row" style="gap:10px; margin-top:14px; overflow-x:auto;">
+      <button class="chip" onclick="useLocationToast()">📍 Nearby Hospitals</button>
+      <button class="chip" onclick="document.getElementById('hosp-search').focus()">🔎 Find Doctor</button>
+      <button class="chip" onclick="nav('bookToken', state.booking||{})">🎟️ Book Token</button>
+      <button class="chip" onclick="nav('myAppointments')">📅 My Appointments</button>
+    </div>
+  </div>
+  <div class="section" style="padding-top:0;">
+    <div class="row-between"><div class="section-title" style="font-size:15px; margin-bottom:10px;">Nearby Hospitals</div></div>
+    <div id="hospital-list-wrap" class="stack-gap-12">${hospitalListHTML('')}</div>
+  </div>
+`;
+function useLocationToast(){ toast('Using your current location','📍'); renderHospitalList(); }
+function hospitalListHTML(query){
+  const q = (query||'').toLowerCase();
+  const list = HOSPITALS.filter(h => !q || h.name.toLowerCase().includes(q) || h.address.toLowerCase().includes(q));
+  if(list.length===0) return `<div class="empty-state"><div class="ico">🏥</div><p>No hospitals match your search.</p></div>`;
+  return list.map(h=>`
+    <button class="card" style="width:100%; text-align:left; display:flex; gap:12px; cursor:pointer;" onclick="nav('hospitalDetails',{hospitalId:'${h.id}'})">
+      <div class="avatar" style="font-size:26px;">🏥</div>
+      <div class="grow">
+        <div class="row-between">
+          <div style="font-weight:700; font-size:14.5px; font-family:var(--font-display);">${h.name}</div>
+        </div>
+        <div class="row" style="gap:6px; margin-top:5px; flex-wrap:wrap;">
+          ${stars(h.rating)} <span class="tag" style="background:var(--surface-tint); color:var(--ink-soft);">📍 ${h.distance}</span> ${statusTag(h.open)}
+        </div>
+      </div>
+    </button>`).join('');
+}
+function renderHospitalList(){
+  const q = val('hosp-search');
+  document.getElementById('hospital-list-wrap').innerHTML = hospitalListHTML(q);
+}
+
+SCREENS.myAppointments = () => `
+  ${topbar('My Appointments')}
+  <div class="section" style="padding-top:6px;">
+    ${state.bookings.length===0 ? `<div class="empty-state"><div class="ico">🎟️</div><p>No appointments booked yet.</p></div>` :
+    `<div class="stack-gap-12">${state.bookings.slice().reverse().map(b=>`
+      <div class="card" onclick="nav('bookingConfirm', ${JSON.stringify(b).replace(/"/g,'&quot;')})" style="cursor:pointer;">
+        <div class="row-between"><div style="font-weight:700; font-size:14.5px;">${b.doctorName}</div>${tag_status(b.status)}</div>
+        <p style="font-size:13px; margin-top:4px;">${b.hospitalName} · ${b.deptName}</p>
+        <div class="row-between" style="margin-top:10px;">
+          <span style="font-size:12.5px; color:var(--ink-soft);">${b.date} · ${b.time}</span>
+          <span class="mono" style="font-weight:700; color:var(--teal-deep);">Token ${b.token}</span>
+        </div>
+      </div>`).join('')}</div>`}
+  </div>
+`;
+function tag_status(s){ return s==='active' ? `<span class="tag tag-open">🟢 Upcoming</span>` : `<span class="tag tag-closed">✔ Completed</span>`; }
+
+SCREENS.hospitalDetails = (params) => {
+  const h = HOSPITALS.find(x=>x.id===params.hospitalId);
+  if(!h) return notFoundScreen();
+  return `
+  ${topbar('Hospital Details')}
+  <div style="padding:0 20px;">
+    <div class="card" style="text-align:center; padding:28px 16px;">
+      <div style="font-size:44px;">🏥</div>
+      <h2 style="font-size:19px; margin-top:10px;">${h.name}</h2>
+      <div class="row" style="gap:8px; justify-content:center; margin-top:8px; flex-wrap:wrap;">
+        ${stars(h.rating)} ${statusTag(h.open)} ${h.emergency?`<span class="tag coral" style="background:var(--coral-pale); color:var(--coral-deep);">🚑 Emergency</span>`:''}
+      </div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="card stack-gap-12">
+      <div class="row" style="gap:10px;"><span>📍</span><span style="font-size:13.5px;">${h.address} · ${h.distance} away</span></div>
+      <div class="row" style="gap:10px;"><span>📞</span><span style="font-size:13.5px;">${h.phone}</span></div>
+      <div class="row" style="gap:10px;"><span>🕐</span><span style="font-size:13.5px;">${h.hours}</span></div>
+    </div>
+
+    <div style="margin-top:18px;">
+      <div class="section-title" style="font-size:15px;">Departments</div>
+      <div class="row" style="gap:8px; flex-wrap:wrap;">
+        ${h.depts.map(dId=>{const d=DEPARTMENTS.find(x=>x.id===dId); return `<span class="chip">${d.ico} ${d.name}</span>`;}).join('')}
+      </div>
+    </div>
+
+    <div style="margin-top:22px;" class="stack-gap-12">
+      <button class="btn btn-primary" onclick="nav('department',{hospitalId:'${h.id}'})">VIEW DOCTORS</button>
+      <button class="btn btn-secondary" onclick="nav('department',{hospitalId:'${h.id}'})">BOOK APPOINTMENT</button>
+      <div class="btn-block-row">
+        <button class="btn btn-ghost" onclick="toast('Calling ${h.name}… (demo)','📞')">CALL</button>
+        <button class="btn btn-ghost" onclick="toast('Opening directions… (demo)','🧭')">GET DIRECTIONS</button>
+      </div>
+    </div>
+  </div>`;
+};
+
+SCREENS.department = (params) => {
+  const h = HOSPITALS.find(x=>x.id===params.hospitalId);
+  if(!h) return notFoundScreen();
+  return `
+  ${topbar('Select Department')}
+  <div class="section" style="padding-top:6px;">
+    <div class="section-sub">Choose a department at <b>${h.name}</b></div>
+    <div class="cat-grid">
+      ${h.depts.map(dId=>{const d=DEPARTMENTS.find(x=>x.id===dId); return `
+      <button class="cat-card" onclick="nav('doctors',{hospitalId:'${h.id}', dept:'${d.id}'})">
+        <div class="cat-ico">${d.ico}</div><span>${d.name}</span>
+      </button>`;}).join('')}
+    </div>
+  </div>`;
+};
+
+SCREENS.doctors = (params) => {
+  const h = HOSPITALS.find(x=>x.id===params.hospitalId);
+  const dept = DEPARTMENTS.find(x=>x.id===params.dept);
+  const docs = DOCTORS.filter(d=>d.hospitalId===params.hospitalId && d.dept===params.dept);
+  return `
+  ${topbar(dept ? dept.name : 'Doctors')}
+  <div class="section" style="padding-top:6px;">
+    <div class="section-sub">${h?h.name:''} · ${docs.length} doctor${docs.length!==1?'s':''} available</div>
+    <div class="stack-gap-12">
+      ${docs.length===0 ? `<div class="empty-state"><div class="ico">🩺</div><p>No doctors listed for this department right now.</p></div>` :
+      docs.map(doc=>`
+        <button class="card" style="width:100%; text-align:left; cursor:pointer;" onclick="nav('bookToken',{hospitalId:'${h.id}', dept:'${dept.id}', doctorId:'${doc.id}'})">
+          <div class="row" style="gap:12px;">
+            <div class="avatar" style="font-size:24px;">🩺</div>
+            <div class="grow">
+              <div style="font-weight:700; font-family:var(--font-display); font-size:14.5px;">${doc.name}</div>
+              <p style="font-size:12.5px; margin-top:2px;">${doc.spec} · ${doc.exp} Years Experience</p>
+              <div class="row" style="gap:6px; margin-top:6px; flex-wrap:wrap;">
+                ${stars(doc.rating)}
+                <span class="tag" style="background:var(--surface-tint); color:var(--ink-soft);">₹${doc.fee} Fee</span>
+              </div>
+            </div>
+          </div>
+          <div class="divider"></div>
+          <div class="row-between">
+            <span style="font-size:12px; color:var(--ink-soft);">Current Running Token</span>
+            ${tokenBoard(state.runningTokenByDoctor[doc.id])}
+          </div>
+        </button>`).join('')}
+    </div>
+  </div>`;
+};
+
+const TIME_SLOTS = ['09:00 AM','10:30 AM','12:00 PM','02:30 PM','04:00 PM','06:30 PM'];
+function nextDates(n){
+  const out=[]; const today=new Date();
+  for(let i=0;i<n;i++){
+    const d=new Date(today); d.setDate(today.getDate()+i);
+    const label = i===0?'Today': i===1?'Tomorrow': d.toLocaleDateString('en-US',{weekday:'short'});
+    out.push({iso:d.toISOString().slice(0,10), label, day:d.getDate(), full:d.toLocaleDateString('en-US',{month:'long', day:'numeric', year:'numeric'})});
+  }
+  return out;
+}
+let bkSelDate=null, bkSelTime=null;
+SCREENS.bookToken = (params) => {
+  const h = HOSPITALS.find(x=>x.id===params.hospitalId);
+  const doc = DOCTORS.find(x=>x.id===params.doctorId);
+  const dept = doc ? DEPARTMENTS.find(x=>x.id===doc.dept) : null;
+  if(!h||!doc) return notFoundScreen();
+  const dates = nextDates(5);
+  if(!bkSelDate) bkSelDate = dates[0].iso;
+  if(!bkSelTime) bkSelTime = TIME_SLOTS[1];
+  const running = state.runningTokenByDoctor[doc.id];
+  const waiting = 5;
+  const nextToken = running + waiting;
+  const estWait = waiting*8;
+  return `
+  ${topbar('Book Token')}
+  <div class="section" style="padding-top:6px;">
+    <div class="card row" style="gap:12px;">
+      <div class="avatar" style="font-size:24px;">🩺</div>
+      <div>
+        <div style="font-weight:700; font-family:var(--font-display); font-size:14.5px;">${doc.name}</div>
+        <p style="font-size:12.5px;">${dept.name} · ${h.name}</p>
+      </div>
+    </div>
+
+    <div style="margin-top:18px;">
+      <div class="section-title" style="font-size:15px;">Select Date</div>
+      <div class="row" style="gap:10px; overflow-x:auto; padding-bottom:4px;">
+        ${dates.map(d=>`<button class="chip ${bkSelDate===d.iso?'active':''}" style="flex-direction:column; min-width:58px; text-align:center;" onclick="bkSelDate='${d.iso}'; render();">
+          <div style="font-size:10.5px;">${d.label}</div><div style="font-size:15px; font-weight:700;">${d.day}</div>
+        </button>`).join('')}
+      </div>
+    </div>
+
+    <div style="margin-top:18px;">
+      <div class="section-title" style="font-size:15px;">Available Time</div>
+      <div class="row" style="gap:10px; flex-wrap:wrap;">
+        ${TIME_SLOTS.map(t=>`<button class="chip ${bkSelTime===t?'active':''}" onclick="bkSelTime='${t}'; render();">${t}</button>`).join('')}
+      </div>
+    </div>
+
+    <div class="card" style="margin-top:20px; background:var(--teal-deep); border:none;">
+      <div class="row-between"><span style="color:#BFE3DC; font-size:12.5px;">Current Running Token</span>${tokenBoard(running)}</div>
+      <div class="divider" style="background:rgba(255,255,255,0.15);"></div>
+      <div class="row-between" style="margin-top:2px;"><span style="color:#fff; font-size:13px;">Next Available Token</span><span style="color:#fff; font-weight:700; font-family:var(--font-mono);">${nextToken}</span></div>
+      <div class="row-between" style="margin-top:8px;"><span style="color:#BFE3DC; font-size:12.5px;">Patients Waiting</span><span style="color:#fff; font-size:13px;">${waiting}</span></div>
+      <div class="row-between" style="margin-top:8px;"><span style="color:#BFE3DC; font-size:12.5px;">Estimated Waiting Time</span><span style="color:#fff; font-size:13px;">${estWait} Minutes</span></div>
+    </div>
+
+    <button class="btn btn-primary" style="margin-top:20px;" onclick="confirmBookToken('${h.id}','${doc.id}','${dept.id}')">BOOK TOKEN</button>
+  </div>`;
+};
+function confirmBookToken(hospitalId, doctorId, deptId){
+  const h=HOSPITALS.find(x=>x.id===hospitalId), doc=DOCTORS.find(x=>x.id===doctorId), dept=DEPARTMENTS.find(x=>x.id===deptId);
+  const dates = nextDates(5);
+  const dateObj = dates.find(d=>d.iso===bkSelDate) || dates[0];
+  const running = state.runningTokenByDoctor[doc.id];
+  const token = running + 5;
+  const booking = {
+    id:'bk'+Date.now(), hospitalId, hospitalName:h.name, doctorId, doctorName:doc.name, deptId, deptName:dept.name,
+    date:dateObj.full, time:bkSelTime, token, status:'active', reminderToken:null, reminderFired:false,
+  };
+  state.booking = booking;
+  state.bookings.push(booking);
+  bkSelDate=null; bkSelTime=null;
+  toast('Token booked successfully','🎉');
+  nav('bookingConfirm', booking);
+}
+
+SCREENS.bookingConfirm = (b) => {
+  if(!b || !b.token) return notFoundScreen();
+  return `
+  ${topbar('Booking Confirmed', {back:false})}
+  <div class="section" style="padding-top:10px; text-align:center;">
+    <div style="font-size:48px;">🎉</div>
+    <h2 style="font-size:19px; margin-top:10px;">Token Booking Confirmed</h2>
+    <p style="font-size:13.5px; margin-top:4px;">Your appointment has been scheduled.</p>
+  </div>
+  <div class="section" style="padding-top:0;">
+    <div class="card stack-gap-12">
+      <div class="row-between"><span style="font-size:12.5px; color:var(--ink-faint);">Hospital</span><span style="font-weight:600; font-size:13.5px;">${b.hospitalName}</span></div>
+      <div class="row-between"><span style="font-size:12.5px; color:var(--ink-faint);">Doctor</span><span style="font-weight:600; font-size:13.5px;">${b.doctorName}</span></div>
+      <div class="row-between"><span style="font-size:12.5px; color:var(--ink-faint);">Department</span><span style="font-weight:600; font-size:13.5px;">${b.deptName}</span></div>
+      <div class="row-between"><span style="font-size:12.5px; color:var(--ink-faint);">Date</span><span style="font-weight:600; font-size:13.5px;">${b.date}</span></div>
+      <div class="row-between"><span style="font-size:12.5px; color:var(--ink-faint);">Time</span><span style="font-weight:600; font-size:13.5px;">${b.time}</span></div>
+      <div class="divider"></div>
+      <div class="row-between"><span style="font-size:13px; font-weight:600;">Your Token</span>${tokenBoard(b.token,'lg')}</div>
+    </div>
+
+    <div class="stack-gap-12" style="margin-top:20px;">
+      <button class="btn btn-primary" onclick="nav('liveToken', ${JSON.stringify(b).replace(/"/g,'&quot;')})">TRACK TOKEN</button>
+      <button class="btn btn-secondary" onclick="nav('setReminder', ${JSON.stringify(b).replace(/"/g,'&quot;')})">SET REMINDER</button>
+      <button class="btn btn-ghost" onclick="navRoot('dashboard')">BACK TO DASHBOARD</button>
+    </div>
+  </div>`;
+};
+
+SCREENS.liveToken = (b) => {
+  if(!b || !b.token) return notFoundScreen();
+  const running = state.runningTokenByDoctor[b.doctorId];
+  const upcoming = [running+1, running+2, running+3, running+4];
+  const pct = Math.min(100, Math.round((running / b.token)*100));
+  return `
+  ${topbar('Live Token Status')}
+  <div class="section" style="padding-top:6px;">
+    <div class="section-sub">${b.doctorName} · ${b.hospitalName}</div>
+    <div class="card" style="background:var(--teal-deep); border:none; text-align:center; padding:26px 16px;">
+      <div style="color:#BFE3DC; font-size:11.5px; letter-spacing:0.1em; font-weight:600;">CURRENT RUNNING TOKEN</div>
+      <div style="margin-top:12px;">${tokenBoard(running,'lg')}</div>
+      <div style="color:#BFE3DC; font-size:12px; margin-top:14px;">Upcoming: ${upcoming.join(' → ')}</div>
+    </div>
+
+    <div class="card" style="margin-top:14px;">
+      <div class="row-between"><span style="font-size:13px; font-weight:600;">Your Token</span>${tokenBoard(b.token)}</div>
+      <div class="progress-track" style="margin-top:14px;"><div class="progress-fill" style="width:${pct}%;"></div></div>
+      <p style="font-size:11.5px; margin-top:8px; text-align:right;">${b.token-running>0 ? `${b.token-running} tokens to go` : 'Almost your turn!'}</p>
+    </div>
+
+    <p style="font-size:12px; text-align:center; margin-top:14px;">🔄 Live updates every few seconds — this screen updates automatically.</p>
+
+    <div class="stack-gap-12" style="margin-top:18px;">
+      <button class="btn btn-secondary" onclick="nav('setReminder', ${JSON.stringify(b).replace(/"/g,'&quot;')})">🔔 SET SMART REMINDER</button>
+      <button class="btn btn-ghost" onclick="navRoot('dashboard')">BACK TO DASHBOARD</button>
+    </div>
+  </div>`;
+};
+
+SCREENS.setReminder = (b) => {
+  if(!b || !b.token) return notFoundScreen();
+  const options = [];
+  for(let t=Math.max(1,b.token-5); t<b.token; t++) options.push(t);
+  const booking = state.bookings.find(x=>x.id===b.id) || b;
+  return `
+  ${topbar('Smart Token Reminder')}
+  <div class="section" style="padding-top:6px; text-align:center;">
+    <div style="font-size:34px;">🔔</div>
+    <h2 style="font-size:18px; margin-top:8px;">Don't Wait Blindly</h2>
+    <p style="font-size:13.5px; margin-top:4px;">Get notified when your appointment is getting closer.</p>
+  </div>
+  <div class="section" style="padding-top:0;">
+    <div class="card row-between">
+      <span style="font-size:13px; font-weight:600;">Your Token</span>${tokenBoard(b.token)}
+    </div>
+
+    ${booking.reminderToken ? `
+    <div class="card" style="margin-top:14px; background:var(--teal-pale); border:none;">
+      <div style="font-weight:700; color:var(--teal-deep); font-size:14px;">🔔 Reminder Set</div>
+      <p style="font-size:13px; margin-top:4px; color:var(--teal-deep);">We'll notify you when Token ${booking.reminderToken} is running.</p>
+    </div>
+    <button class="btn btn-ghost" style="margin-top:16px;" onclick="nav('liveToken', ${JSON.stringify(booking).replace(/"/g,'&quot;')})">VIEW LIVE TOKEN</button>
+    ` : `
+    <div style="margin-top:18px;">
+      <div class="section-title" style="font-size:14.5px;">Remind me when token reaches:</div>
+      <div class="row" style="gap:10px; flex-wrap:wrap;">
+        ${options.map(t=>`<button class="chip" onclick="setReminderFor('${b.id}', ${t})">${t}</button>`).join('')}
+      </div>
+    </div>`}
+    <button class="btn btn-ghost" style="margin-top:20px;" onclick="navRoot('dashboard')">BACK TO DASHBOARD</button>
+  </div>`;
+};
+function setReminderFor(bookingId, tokenNum){
+  const booking = state.bookings.find(x=>x.id===bookingId);
+  if(booking){ booking.reminderToken = tokenNum; booking.reminderFired=false; }
+  if(state.booking && state.booking.id===bookingId){ state.booking.reminderToken = tokenNum; state.booking.reminderFired=false; }
+  toast(`Reminder set for Token ${tokenNum}`,'🔔');
+  render();
+}
+
+/* ================= 6. MEDICINE & PHARMACY ================= */
+SCREENS.pharmacyHome = () => `
+  ${topbar('Medicine & Pharmacy')}
+  <div class="section" style="padding-top:6px;">
+    <div class="section-title">Find Your Medicine Faster</div>
+    <div class="searchbar">
+      <span>🔍</span>
+      <input id="med-search" placeholder="Search medicine e.g. Paracetamol 500mg" onkeydown="if(event.key==='Enter') searchMedicine()">
+    </div>
+    <button class="btn btn-primary" style="margin-top:12px;" onclick="searchMedicine()">🔍 SEARCH MEDICINE</button>
+    <div class="btn-block-row" style="margin-top:10px;">
+      <button class="btn btn-ghost" onclick="toast('Prescription upload simulated','📄')">📄 UPLOAD PRESCRIPTION</button>
+      <button class="btn btn-ghost" onclick="toast('Medicine image captured (demo)','📷')">📷 UPLOAD IMAGE</button>
+    </div>
+  </div>
+  <div class="section" style="padding-top:0;">
+    <div class="section-title" style="font-size:15px;">Nearby Pharmacies</div>
+    <div class="stack-gap-12">${pharmacyListHTML()}</div>
+  </div>
+`;
+function pharmacyListHTML(){
+  return PHARMACIES.map(p=>`
+    <button class="card" style="width:100%; text-align:left; cursor:pointer;" onclick="nav('pharmacyDetails',{pharmacyId:'${p.id}'})">
+      <div class="row" style="gap:12px;">
+        <div class="avatar" style="font-size:24px;">💊</div>
+        <div class="grow">
+          <div style="font-weight:700; font-family:var(--font-display); font-size:14.5px;">${p.name}</div>
+          <p style="font-size:12.5px; margin-top:2px;">📍 ${p.distance} away</p>
+          <div class="row" style="gap:6px; margin-top:6px; flex-wrap:wrap;">
+            ${stars(p.rating)} ${statusTag(p.open)} ${p.delivery?`<span class="tag" style="background:var(--surface-tint); color:var(--ink-soft);">🚚 Delivery</span>`:''}
+          </div>
+        </div>
+      </div>
+    </button>`).join('');
+}
+function searchMedicine(){
+  const q = val('med-search') || 'Paracetamol 500mg';
+  state.medicineQuery = q;
+  nav('medicineResults', {query:q});
+}
+SCREENS.medicineResults = (params) => `
+  ${topbar('Search Results')}
+  <div class="section" style="padding-top:6px;">
+    <div class="card" style="background:var(--teal-pale); border:none;">
+      <span style="font-size:12px; color:var(--teal-deep); font-weight:600;">SEARCHING FOR</span>
+      <div style="font-family:var(--font-display); font-weight:700; font-size:16px; margin-top:2px;">${params.query}</div>
+    </div>
+    <div class="section-title" style="font-size:15px; margin-top:18px;">Pharmacies Near You</div>
+    <div class="stack-gap-12">${PHARMACIES.map(p=>`
+      <button class="card" style="width:100%; text-align:left; cursor:pointer;" onclick="nav('pharmacyDetails',{pharmacyId:'${p.id}', medicine:'${params.query}'})">
+        <div class="row" style="gap:12px;">
+          <div class="avatar" style="font-size:24px;">💊</div>
+          <div class="grow">
+            <div style="font-weight:700; font-family:var(--font-display); font-size:14.5px;">${p.name}</div>
+            <p style="font-size:12.5px; margin-top:2px;">📍 ${p.distance} away</p>
+            <div class="row" style="gap:6px; margin-top:6px; flex-wrap:wrap;">${stars(p.rating)} ${statusTag(p.open)} ${p.delivery?`<span class="tag" style="background:var(--surface-tint); color:var(--ink-soft);">🚚 Delivery</span>`:''}</div>
+          </div>
+        </div>
+      </button>`).join('')}
+    </div>
+  </div>
+`;
+
+SCREENS.pharmacyDetails = (params) => {
+  const p = PHARMACIES.find(x=>x.id===params.pharmacyId);
+  if(!p) return notFoundScreen();
+  return `
+  ${topbar('Pharmacy Details')}
+  <div style="padding:0 20px;">
+    <div class="card" style="text-align:center; padding:26px 16px;">
+      <div style="font-size:40px;">💊</div>
+      <h2 style="font-size:18px; margin-top:8px;">${p.name}</h2>
+      <div class="row" style="gap:8px; justify-content:center; margin-top:8px; flex-wrap:wrap;">
+        ${stars(p.rating)} ${statusTag(p.open)} ${p.delivery?`<span class="tag" style="background:var(--surface-tint); color:var(--ink-soft);">🚚 Delivery Available</span>`:''}
+      </div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="card stack-gap-12">
+      <div class="row" style="gap:10px;"><span>📍</span><span style="font-size:13.5px;">${p.address} · ${p.distance}</span></div>
+      <div class="row" style="gap:10px;"><span>📞</span><span style="font-size:13.5px;">${p.phone}</span></div>
+      <div class="row" style="gap:10px;"><span>🕐</span><span style="font-size:13.5px;">${p.hours}</span></div>
+    </div>
+    <div class="stack-gap-12" style="margin-top:18px;">
+      <div class="btn-block-row">
+        <button class="btn btn-ghost" onclick="toast('Calling ${p.name}… (demo)','📞')">CALL</button>
+        <button class="btn btn-ghost" onclick="toast('Message sent to ${p.name} (demo)','💬')">MESSAGE</button>
+      </div>
+      <button class="btn btn-primary" onclick="nav('medicineAvailability',{pharmacyId:'${p.id}', medicine: '${params.medicine||state.medicineQuery||'Paracetamol 500mg'}'})">CHECK MEDICINE</button>
+      <button class="btn btn-secondary" onclick="toast('Prescription uploaded to ${p.name} (demo)','📄')">UPLOAD PRESCRIPTION</button>
+    </div>
+  </div>`;
+};
+
+SCREENS.medicineAvailability = (params) => {
+  const p = PHARMACIES.find(x=>x.id===params.pharmacyId);
+  const medicine = params.medicine || 'Paracetamol 500mg';
+  return `
+  ${topbar('Medicine Availability')}
+  <div class="section" style="padding-top:6px;">
+    <div class="card">
+      <span style="font-size:12px; color:var(--ink-faint);">MEDICINE</span>
+      <div style="font-family:var(--font-display); font-weight:700; font-size:16px; margin-top:2px;">${medicine}</div>
+      <p style="font-size:13px; margin-top:6px;">at ${p?p.name:'Pharmacy'}</p>
+    </div>
+    <p style="text-align:center; margin-top:18px; font-size:14px; font-weight:600; color:var(--ink);">Is this medicine available?</p>
+    <button class="btn btn-primary" style="margin-top:12px;" onclick="sendInquiry('${medicine}')">SEND INQUIRY</button>
+    <div id="inquiry-result" style="margin-top:18px;"></div>
+  </div>`;
+};
+function sendInquiry(medicine){
+  const resEl = document.getElementById('inquiry-result');
+  resEl.innerHTML = `<div class="loading-row"><div class="dot-pulse"><span></span><span></span><span></span></div> Checking with pharmacy…</div>`;
+  setTimeout(()=>{
+    const available = medicine.trim().length % 2 === 0 || medicine.toLowerCase().includes('paracetamol');
+    if(available){
+      resEl.innerHTML = `
+        <div class="card" style="background:var(--teal-pale); border:none;">
+          <div style="font-weight:700; color:var(--teal-deep);">✅ Medicine Available</div>
+          <div class="divider"></div>
+          <div class="row-between"><span style="font-size:13px;">Price</span><span style="font-weight:700;">₹250</span></div>
+          <div class="row-between" style="margin-top:8px;"><span style="font-size:13px;">Delivery</span><span style="font-weight:600;">Available</span></div>
+          <div class="row-between" style="margin-top:8px;"><span style="font-size:13px;">Delivery Charge</span><span style="font-weight:600;">₹30</span></div>
+          <div class="row-between" style="margin-top:8px;"><span style="font-size:13px;">Estimated Delivery</span><span style="font-weight:600;">30 Minutes</span></div>
+          <button class="btn btn-primary" style="margin-top:16px;" onclick="toast('Order placed successfully (demo)','🛍️')">ORDER NOW</button>
+        </div>`;
+      toast('Pharmacy responded to your inquiry','💊');
+    } else {
+      resEl.innerHTML = `
+        <div class="card" style="background:var(--coral-pale); border:none;">
+          <div style="font-weight:700; color:var(--coral-deep);">❌ Currently Not Available</div>
+          <p style="font-size:13px; margin-top:6px; color:var(--coral-deep);">Check nearby pharmacies.</p>
+          <button class="btn btn-coral" style="margin-top:14px;" onclick="nav('medicineResults',{query:'${medicine}'})">SEE NEARBY PHARMACIES</button>
+        </div>`;
+    }
+  }, 1100);
+}
+
+/* ================= 7. BLOOD SUPPORT ================= */
+const BLOOD_GROUPS = ['A+','A-','B+','B-','AB+','AB-','O+','O-'];
+let bloodSelGroup = null, bloodSelUrgency = 'Urgent';
+SCREENS.bloodHome = () => `
+  ${topbar('Blood Support')}
+  <div class="section" style="padding-top:6px; text-align:center;">
+    <div style="font-size:34px;">🩸</div>
+    <h2 style="font-size:19px; margin-top:8px;">Find Blood. Faster.</h2>
+    <p style="font-size:13.5px; margin-top:4px;">During emergencies, every minute matters.</p>
+  </div>
+  <div class="section" style="padding-top:0;">
+    <div class="card">
+      <div class="field">
+        <label>Required Blood Group</label>
+        <div class="row" style="gap:8px; flex-wrap:wrap; margin-top:2px;">
+          ${BLOOD_GROUPS.map(g=>`<button class="chip coral ${bloodSelGroup===g?'active':''}" onclick="bloodSelGroup='${g}'; render();">${g}</button>`).join('')}
+        </div>
+      </div>
+      <div class="field"><label>Current Location</label><input id="blood-loc" placeholder="Bengaluru, Indiranagar" value="${state.profile.city?state.profile.city:''}"></div>
+      <div class="field"><label>Hospital Name (Optional)</label><input id="blood-hosp" placeholder="e.g. City Care Hospital"></div>
+      <div class="field" style="margin-bottom:0;">
+        <label>Urgency Level</label>
+        <div class="row" style="gap:8px; margin-top:2px;">
+          ${['Normal','Urgent','Critical'].map(u=>`<button class="chip coral ${bloodSelUrgency===u?'active':''}" onclick="bloodSelUrgency='${u}'; render();">${u}</button>`).join('')}
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-coral" style="margin-top:16px;" onclick="searchBloodBanks()">SEARCH BLOOD BANKS</button>
+    <button class="btn btn-ghost" style="margin-top:12px;" onclick="nav('emergencyRequest',{group: bloodSelGroup})">🚨 SEND EMERGENCY BLOOD REQUEST</button>
+  </div>
+`;
+function searchBloodBanks(){
+  if(!bloodSelGroup){ toast('Please select a blood group','⚠️'); return; }
+  state.bloodGroup = bloodSelGroup;
+  nav('bloodResults', {group: bloodSelGroup});
+}
+
+SCREENS.bloodResults = (params) => {
+  const group = params.group || state.bloodGroup || 'O+';
+  return `
+  ${topbar('Blood Bank Results')}
+  <div class="section" style="padding-top:6px;">
+    <div class="card" style="background:var(--coral-pale); border:none;">
+      <span style="font-size:12px; color:var(--coral-deep); font-weight:600;">SEARCHING FOR</span>
+      <div style="font-family:var(--font-display); font-weight:700; font-size:18px; margin-top:2px; color:var(--coral-deep);">${group} Blood</div>
+    </div>
+    <div class="section-title" style="font-size:15px; margin-top:18px;">Blood Banks Near You</div>
+    <div class="stack-gap-12">
+      ${BLOOD_BANKS.map(b=>{
+        const avail = b.stock[group];
+        return `<button class="card" style="width:100%; text-align:left; cursor:pointer;" onclick="nav('bloodBankDetails',{bankId:'${b.id}', group:'${group}'})">
+          <div class="row-between">
+            <div style="font-weight:700; font-family:var(--font-display); font-size:14.5px;">${b.name}</div>
+            ${avail ? `<span class="tag tag-open">AVAILABLE</span>` : `<span class="tag tag-closed">UNAVAILABLE</span>`}
+          </div>
+          <div class="row" style="gap:6px; margin-top:8px; flex-wrap:wrap;">
+            <span class="tag" style="background:var(--surface-tint); color:var(--ink-soft);">📍 ${b.distance}</span> ${statusTag(b.open)}
+          </div>
+        </button>`;
+      }).join('')}
+    </div>
+  </div>`;
+};
+
+SCREENS.bloodBankDetails = (params) => {
+  const b = BLOOD_BANKS.find(x=>x.id===params.bankId);
+  const group = params.group || state.bloodGroup || 'O+';
+  if(!b) return notFoundScreen();
+  const avail = b.stock[group];
+  return `
+  ${topbar('Blood Bank Details')}
+  <div style="padding:0 20px;">
+    <div class="card" style="text-align:center; padding:26px 16px;">
+      <div style="font-size:40px;">🩸</div>
+      <h2 style="font-size:18px; margin-top:8px;">${b.name}</h2>
+      <div class="row" style="gap:8px; justify-content:center; margin-top:10px;">
+        <span class="tag" style="background:var(--surface-tint); color:var(--ink-soft);">Required Group: ${group}</span>
+        ${avail ? `<span class="tag tag-open">AVAILABLE</span>` : `<span class="tag tag-closed">UNAVAILABLE</span>`}
+      </div>
+    </div>
+  </div>
+  <div class="section">
+    <div class="card stack-gap-12">
+      <div class="row" style="gap:10px;"><span>📍</span><span style="font-size:13.5px;">${b.address} · ${b.distance}</span></div>
+      <div class="row" style="gap:10px;"><span>📞</span><span style="font-size:13.5px;">${b.phone}</span></div>
+      <div class="row" style="gap:10px;"><span>🕐</span><span style="font-size:13.5px;">${b.hours}</span></div>
+    </div>
+    <div class="stack-gap-12" style="margin-top:18px;">
+      <div class="btn-block-row">
+        <button class="btn btn-ghost" onclick="toast('Calling ${b.name}… (demo)','📞')">CALL NOW</button>
+        <button class="btn btn-ghost" onclick="toast('Opening directions… (demo)','🧭')">GET DIRECTIONS</button>
+      </div>
+      <button class="btn btn-coral" onclick="nav('emergencyRequest',{group:'${group}', bank:'${b.name}'})">SEND REQUEST</button>
+    </div>
+  </div>`;
+};
+
+SCREENS.emergencyRequest = (params) => `
+  ${topbar('Emergency Blood Request')}
+  <div class="section" style="padding-top:6px;">
+    <div class="card" style="background:var(--coral-pale); border:none; text-align:center;">
+      <div style="font-size:13.5px; color:var(--coral-deep); font-weight:700;">🚨 Emergency Request</div>
+      <p style="font-size:12.5px; margin-top:4px; color:var(--coral-deep);">Fill in the details below — nearby blood services will be notified immediately.</p>
+    </div>
+    <div class="card" style="margin-top:14px;">
+      <div class="field"><label>Patient Name</label><input id="er-name" placeholder="Enter patient's full name"></div>
+      <div class="field"><label>Required Blood Group</label>
+        <select id="er-group">${BLOOD_GROUPS.map(g=>`<option ${params.group===g?'selected':''}>${g}</option>`).join('')}</select>
+      </div>
+      <div class="field"><label>Required Units</label><input id="er-units" type="number" min="1" value="1" placeholder="e.g. 2"></div>
+      <div class="field"><label>Hospital Name</label><input id="er-hospital" value="${params.bank||''}" placeholder="e.g. City Care Hospital"></div>
+      <div class="field"><label>Location</label><input id="er-location" placeholder="e.g. Indiranagar, Bengaluru"></div>
+      <div class="field"><label>Emergency Contact Number</label><input id="er-contact" placeholder="9876543210"></div>
+      <div class="field" style="margin-bottom:0;">
+        <label>Urgency Level</label>
+        <div class="row" style="gap:8px; margin-top:2px;" id="er-urgency-row">
+          ${['Normal','Urgent','Critical'].map((u,i)=>`<button type="button" class="chip coral ${i===1?'active':''}" data-u="${u}" onclick="selectUrgency(this,'${u}')">${u}</button>`).join('')}
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-coral" style="margin-top:18px;" onclick="submitEmergencyRequest()">SEND EMERGENCY REQUEST</button>
+  </div>
+`;
+let erUrgency = 'Urgent';
+function selectUrgency(btn, u){
+  erUrgency = u;
+  document.querySelectorAll('#er-urgency-row .chip').forEach(c=>c.classList.remove('active'));
+  btn.classList.add('active');
+}
+function submitEmergencyRequest(){
+  const name = val('er-name'), contact = val('er-contact');
+  let ok = true;
+  if(!name){ fieldError('er-name', null, true); ok=false; toast('Please enter the patient name','⚠️'); }
+  if(!contact){ ok=false; toast('Please enter an emergency contact number','⚠️'); }
+  if(!ok) return;
+  const summary = {
+    name, group: val('er-group'), units: val('er-units')||'1', hospital: val('er-hospital')||'Not specified',
+    location: val('er-location')||'Not specified', contact, urgency: erUrgency,
+  };
+  erUrgency='Urgent';
+  nav('emergencyConfirm', summary);
+}
+SCREENS.emergencyConfirm = (r) => `
+  ${topbar('Request Sent', {back:false})}
+  <div class="section" style="padding-top:16px; text-align:center;">
+    <div style="font-size:48px;">🩸</div>
+    <h2 style="font-size:19px; margin-top:10px;">Emergency Request Sent</h2>
+    <p style="font-size:13.5px; margin-top:6px;">Your request has been shared with nearby registered blood services.</p>
+  </div>
+  <div class="section" style="padding-top:0;">
+    <div class="card stack-gap-12">
+      <div class="row-between"><span style="font-size:12.5px; color:var(--ink-faint);">Patient</span><span style="font-weight:600; font-size:13.5px;">${r.name||'—'}</span></div>
+      <div class="row-between"><span style="font-size:12.5px; color:var(--ink-faint);">Blood Group</span><span style="font-weight:600; font-size:13.5px;">${r.group||'—'}</span></div>
+      <div class="row-between"><span style="font-size:12.5px; color:var(--ink-faint);">Units</span><span style="font-weight:600; font-size:13.5px;">${r.units||'—'}</span></div>
+      <div class="row-between"><span style="font-size:12.5px; color:var(--ink-faint);">Hospital</span><span style="font-weight:600; font-size:13.5px;">${r.hospital||'—'}</span></div>
+      <div class="row-between"><span style="font-size:12.5px; color:var(--ink-faint);">Urgency</span><span class="tag coral" style="background:var(--coral-pale); color:var(--coral-deep);">${r.urgency||'—'}</span></div>
+    </div>
+    <button class="btn btn-primary" style="margin-top:20px;" onclick="navRoot('dashboard')">BACK TO DASHBOARD</button>
+  </div>
+`;
+
+/* ================= 8. MY HEALTH RECORDS ================= */
+SCREENS.recordsHome = () => `
+  <div style="padding:18px 20px 6px;">
+    <div class="row-between">
+      <div>
+        <div class="eyebrow">My Health Records</div>
+        <h1 style="font-size:20px; margin-top:4px;">Your Health Records</h1>
+        <p style="font-size:13.5px; margin-top:2px;">Important documents. Organized in one place.</p>
+      </div>
+      <button class="icon-btn" onclick="nav('notifications')">🔔${unreadCount()>0?'<span class="badge-dot"></span>':''}</button>
+    </div>
+  </div>
+  <div class="section" style="padding-top:10px;">
+    <div class="section-title" style="font-size:15px;">Categories</div>
+    <div class="row" style="gap:8px; flex-wrap:wrap;">
+      ${RECORD_CATS.map(c=>`<button class="chip" onclick="nav('recordsByCategory',{cat:'${c.id}'})">${c.ico} ${c.name}</button>`).join('')}
+    </div>
+  </div>
+  <div class="section" style="padding-top:6px;">
+    <button class="btn btn-primary" onclick="nav('addRecord')">+ ADD MEDICAL DOCUMENT</button>
+  </div>
+  <div class="section" style="padding-top:0;">
+    <div class="section-title" style="font-size:15px;">All Documents</div>
+    <div class="stack-gap-12">${recordListHTML(state.records)}</div>
+  </div>
+`;
+function recordListHTML(list){
+  if(list.length===0) return `<div class="empty-state"><div class="ico">📁</div><p>No documents yet. Add your first medical document.</p></div>`;
+  return list.slice().reverse().map(r=>{
+    const cat = RECORD_CATS.find(c=>c.id===r.cat) || {ico:'📄', name:'Document'};
+    return `<button class="card" style="width:100%; text-align:left; cursor:pointer;" onclick="nav('recordDetails',{recordId:'${r.id}'})">
+      <div class="row" style="gap:12px;">
+        <div class="avatar" style="font-size:22px;">${cat.ico}</div>
+        <div class="grow">
+          <div style="font-weight:700; font-family:var(--font-display); font-size:14px;">${r.name}</div>
+          <p style="font-size:12px; margin-top:2px;">${cat.name} · ${r.date}</p>
+        </div>
+      </div>
+    </button>`;
+  }).join('');
+}
+SCREENS.recordsByCategory = (params) => {
+  const cat = RECORD_CATS.find(c=>c.id===params.cat);
+  const list = state.records.filter(r=>r.cat===params.cat);
+  return `
+  ${topbar(cat?cat.name:'Documents')}
+  <div class="section" style="padding-top:6px;">
+    <div class="stack-gap-12">${recordListHTML(list)}</div>
+    <button class="btn btn-primary" style="margin-top:16px;" onclick="nav('addRecord',{cat:params.cat})">+ ADD MEDICAL DOCUMENT</button>
+  </div>`;
+};
+
+SCREENS.addRecord = (params) => `
+  ${topbar('Add Medical Document')}
+  <div class="section" style="padding-top:6px;">
+    <div class="section-title" style="font-size:15px;">Upload Method</div>
+    <div class="btn-block-row">
+      <button class="btn btn-secondary" onclick="toast('Image selected (demo)','🖼️')">🖼️ IMAGE</button>
+      <button class="btn btn-secondary" onclick="toast('PDF selected (demo)','📄')">📄 PDF</button>
+      <button class="btn btn-secondary" onclick="toast('Camera scan captured (demo)','📷')">📷 SCAN</button>
+    </div>
+    <div class="card" style="margin-top:18px;">
+      <div class="field"><label>File Name</label><input id="rec-name" placeholder="e.g. Blood Test Report"></div>
+      <div class="field"><label>Category</label>
+        <select id="rec-cat">${RECORD_CATS.map(c=>`<option value="${c.id}" ${params.cat===c.id?'selected':''}>${c.ico} ${c.name}</option>`).join('')}</select>
+      </div>
+      <div class="field"><label>Hospital Name</label><input id="rec-hosp" placeholder="e.g. City Care Hospital"></div>
+      <div class="field"><label>Doctor Name</label><input id="rec-doc" placeholder="e.g. Dr. Ravi Kumar"></div>
+      <div class="field"><label>Report Date</label><input id="rec-date" type="date"></div>
+      <div class="field" style="margin-bottom:0;"><label>Notes</label><textarea id="rec-notes" rows="2" placeholder="Optional notes"></textarea></div>
+    </div>
+    <button class="btn btn-primary" style="margin-top:18px;" onclick="saveRecord()">SAVE DOCUMENT</button>
+  </div>
+`;
+function saveRecord(){
+  const name = val('rec-name');
+  if(!name){ toast('Please enter a file name','⚠️'); return; }
+  const d = val('rec-date');
+  const dateLabel = d ? new Date(d).toLocaleDateString('en-US',{day:'2-digit', month:'short', year:'numeric'}) : new Date().toLocaleDateString('en-US',{day:'2-digit', month:'short', year:'numeric'});
+  const rec = {id:'r'+Date.now(), name, cat: val('rec-cat'), hospital: val('rec-hosp')||'—', doctor: val('rec-doc')||'—', date: dateLabel, uploaded: dateLabel, notes: val('rec-notes')};
+  state.records.push(rec);
+  state.notifications.unshift({ico:'📁', text:`Your ${name} was successfully uploaded.`, time:'Just now', unread:true});
+  toast('Document Successfully Saved ✓','✅');
+  nav('recordDetails',{recordId:rec.id});
+}
+
+SCREENS.recordDetails = (params) => {
+  const r = state.records.find(x=>x.id===params.recordId);
+  if(!r) return notFoundScreen();
+  const cat = RECORD_CATS.find(c=>c.id===r.cat) || {ico:'📄', name:'Document'};
+  return `
+  ${topbar('Document Details')}
+  <div class="section" style="padding-top:6px;">
+    <div class="card" style="text-align:center; padding:36px 16px; background:var(--surface-tint); border:1.5px dashed var(--line);">
+      <div style="font-size:44px;">${cat.ico}</div>
+      <p style="font-size:12px; margin-top:8px;">File preview (demo)</p>
+    </div>
+    <div class="card stack-gap-12" style="margin-top:14px;">
+      <div class="row-between"><span style="font-size:12.5px; color:var(--ink-faint);">File Name</span><span style="font-weight:600; font-size:13.5px;">${r.name}</span></div>
+      <div class="row-between"><span style="font-size:12.5px; color:var(--ink-faint);">Category</span><span style="font-weight:600; font-size:13.5px;">${cat.name}</span></div>
+      <div class="row-between"><span style="font-size:12.5px; color:var(--ink-faint);">Hospital</span><span style="font-weight:600; font-size:13.5px;">${r.hospital}</span></div>
+      <div class="row-between"><span style="font-size:12.5px; color:var(--ink-faint);">Doctor</span><span style="font-weight:600; font-size:13.5px;">${r.doctor}</span></div>
+      <div class="row-between"><span style="font-size:12.5px; color:var(--ink-faint);">Report Date</span><span style="font-weight:600; font-size:13.5px;">${r.date}</span></div>
+      <div class="row-between"><span style="font-size:12.5px; color:var(--ink-faint);">Upload Date</span><span style="font-weight:600; font-size:13.5px;">${r.uploaded}</span></div>
+      ${r.notes?`<div><span style="font-size:12.5px; color:var(--ink-faint);">Notes</span><p style="font-size:13px; margin-top:4px;">${r.notes}</p></div>`:''}
+    </div>
+    <div class="btn-block-row" style="margin-top:18px;">
+      <button class="btn btn-secondary" onclick="toast('Opening document… (demo)','👁️')">VIEW</button>
+      <button class="btn btn-secondary" onclick="toast('Download started (demo)','⬇️')">DOWNLOAD</button>
+    </div>
+    <button class="btn btn-ghost" style="margin-top:12px; color:var(--coral-deep); border-color:var(--coral-pale);" onclick="deleteRecord('${r.id}')">DELETE</button>
+  </div>`;
+};
+function deleteRecord(id){
+  state.records = state.records.filter(r=>r.id!==id);
+  toast('Document deleted','🗑️');
+  back();
+}
+
+/* ================= 9. NOTIFICATIONS ================= */
+SCREENS.notifications = () => {
+  state.notifications.forEach(n=>n.unread=false);
+  return `
+  <div style="padding:18px 20px 6px;">
+    <div class="row-between">
+      <div><div class="eyebrow">Updates</div><h1 style="font-size:20px; margin-top:4px;">Notifications</h1></div>
+    </div>
+  </div>
+  <div class="section" style="padding-top:10px;">
+    ${state.notifications.length===0 ? `<div class="empty-state"><div class="ico">🔔</div><p>You're all caught up.</p></div>` :
+    `<div class="stack-gap-12">${state.notifications.map(n=>`
+      <div class="card row" style="gap:12px;">
+        <div class="avatar" style="font-size:20px;">${n.ico}</div>
+        <div class="grow">
+          <p style="font-size:13.5px; color:var(--ink);">${n.text}</p>
+          <span style="font-size:11.5px; color:var(--ink-faint);">${n.time}</span>
+        </div>
+      </div>`).join('')}</div>`}
+  </div>`;
+};
+
+/* ================= 10. PROFILE ================= */
+SCREENS.profile = () => `
+  <div style="padding:18px 20px 6px;">
+    <div class="row-between">
+      <div><div class="eyebrow">Account</div><h1 style="font-size:20px; margin-top:4px;">Profile</h1></div>
+    </div>
+  </div>
+  <div class="section" style="padding-top:10px;">
+    <div class="card" style="text-align:center; padding:26px 16px;">
+      <div class="avatar round" style="width:74px; height:74px; font-size:30px; margin:0 auto;">👤</div>
+      <h2 style="font-size:18px; margin-top:12px;">${state.user.name||'Pavan Kumar'}</h2>
+      <p style="font-size:13px; margin-top:2px;">${state.profile.email||state.user.email||'you@example.com'}</p>
+      <p style="font-size:13px;">${state.profile.mobile||state.user.phone||'—'}</p>
+      <button class="btn btn-secondary btn-sm" style="margin-top:14px;" onclick="nav('editProfile')">EDIT PROFILE</button>
+    </div>
+
+    <div class="card stack-gap-12" style="margin-top:14px;">
+      <div class="row" style="gap:10px;"><span>🏠</span><span style="font-size:13.5px;">${[state.profile.house,state.profile.street,state.profile.city,state.profile.state].filter(Boolean).join(', ')||'No address on file'}</span></div>
+      <div class="row" style="gap:10px;"><span>🚨</span><span style="font-size:13.5px;">${state.profile.ecName?`${state.profile.ecName} (${state.profile.ecRel||'—'}) · ${state.profile.ecPhone||'—'}`:'No emergency contact on file'}</span></div>
+      <div class="row" style="gap:10px;"><span>🩸</span><span style="font-size:13.5px;">Blood Group: ${state.profile.bloodGroup||'Not set'}</span></div>
+    </div>
+
+    <div class="section-title" style="font-size:15px; margin-top:20px;">Recent Activity</div>
+    <div class="stack-gap-12">
+      ${state.bookings.slice(-2).reverse().map(b=>`<div class="card"><p style="font-size:13px;">🎟️ Booked Token ${b.token} with ${b.doctorName} at ${b.hospitalName}</p></div>`).join('')}
+      ${state.records.slice(-2).reverse().map(r=>`<div class="card"><p style="font-size:13px;">📁 Uploaded ${r.name}</p></div>`).join('')}
+      ${(state.bookings.length===0 && state.records.length===0) ? `<p style="font-size:13px; text-align:center; color:var(--ink-faint);">No recent activity yet.</p>` : ''}
+    </div>
+
+    <button class="btn btn-ghost" style="margin-top:22px;" onclick="doLogout()">LOG OUT</button>
+  </div>
+`;
+function doLogout(){
+  toast('Logged out (demo)','👋');
+  navRoot('welcome');
+}
+
+SCREENS.editProfile = () => `
+  ${topbar('Edit Profile')}
+  <div class="section" style="padding-top:6px;">
+    <div class="card">
+      <div class="field"><label>Full Name</label><input id="ep-name" value="${state.user.name||''}"></div>
+      <div class="field"><label>Email Address</label><input id="ep-email" value="${state.profile.email||state.user.email||''}"></div>
+      <div class="field"><label>Mobile Number</label><input id="ep-mobile" value="${state.profile.mobile||state.user.phone||''}"></div>
+      <div class="field"><label>Address</label><input id="ep-address" value="${[state.profile.house,state.profile.street].filter(Boolean).join(', ')}"></div>
+      <div class="field"><label>Emergency Contact Name</label><input id="ep-ecname" value="${state.profile.ecName||''}"></div>
+      <div class="field"><label>Emergency Mobile Number</label><input id="ep-ecphone" value="${state.profile.ecPhone||''}"></div>
+      <div class="field" style="margin-bottom:0;"><label>Blood Group</label>
+        <select id="ep-bg">
+          <option value="">Select blood group</option>
+          ${BLOOD_GROUPS.map(g=>`<option ${state.profile.bloodGroup===g?'selected':''}>${g}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+    <button class="btn btn-primary" style="margin-top:18px;" onclick="saveEditProfile()">SAVE CHANGES</button>
+  </div>
+`;
+function saveEditProfile(){
+  state.user.name = val('ep-name');
+  state.profile.email = val('ep-email');
+  state.profile.mobile = val('ep-mobile');
+  const [house, ...rest] = val('ep-address').split(',');
+  state.profile.house = house?house.trim():state.profile.house;
+  state.profile.street = rest.join(',').trim()||state.profile.street;
+  state.profile.ecName = val('ep-ecname');
+  state.profile.ecPhone = val('ep-ecphone');
+  state.profile.bloodGroup = val('ep-bg');
+  toast('Profile updated','✅');
+  back();
+}
+
+/* ================= LIVE TOKEN SIMULATION ================= */
+setInterval(()=>{
+  let touchedActiveDoctor = null;
+  state.bookings.filter(b=>b.status==='active').forEach(b=>{
+    const running = state.runningTokenByDoctor[b.doctorId];
+    if(running < b.token){
+      state.runningTokenByDoctor[b.doctorId] = running + 1;
+      const newRunning = state.runningTokenByDoctor[b.doctorId];
+      touchedActiveDoctor = b.doctorId;
+      if(b.reminderToken && !b.reminderFired && newRunning >= b.reminderToken){
+        b.reminderFired = true;
+        state.notifications.unshift({ico:'🎟️', text:`Token ${b.reminderToken} is currently running. Your Token: ${b.token}. Please prepare to reach the hospital.`, time:'Just now', unread:true});
+        toast(`🔔 Token ${b.reminderToken} is running — get ready!`, '🎟️');
+      }
+      if(newRunning >= b.token){
+        b.status='completed';
+      }
+    }
+  });
+  const screenNow = current().screen;
+  if(touchedActiveDoctor && ['liveToken','dashboard','bookToken','doctors'].includes(screenNow)){
+    render();
+  } else if(screenNow==='notifications' || screenNow==='profile' || screenNow==='recordsHome'){
+    renderBottomNav();
+  }
+}, 4000);
+
+/* ================= INIT ================= */
+render();
+
+
+</script>
+</body>
+</html>
